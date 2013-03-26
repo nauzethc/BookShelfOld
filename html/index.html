@@ -1,0 +1,56 @@
+<html data-ng-app="Library">
+    <head>
+        <title>RESTful Library</title>
+        <link rel="stylesheet" href="{{ STATIC_URL}}css/style.css">
+        <script type="text/javascript" src="{{ STATIC_URL }}js/angular.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/angular-resource.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/app.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/services.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/controllers.js"></script>
+    </head>
+
+<body ng-controller="BookController">
+    <header>
+        <div class="container">
+            <h1>It works!</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="box">
+            <h3>New Book</h3>
+            <form>
+                <input ng-model="newBook.title" type="text" placeholder="Insert title..." />
+                <select
+                    ng-model="newBook.user"
+                    ng-options="user.resource_uri as user.username for user in users.objects">
+                </select>
+                <button ng-click="save(newBook)">Save</button>
+                <pre>
+                    {[ newBook ]}
+                </pre>
+            </form>
+        </div>
+
+        <div class="box">
+            <table ng-init="refreshBooks()">
+                <theader>
+                    <tr>
+                        <th>Book List</th>
+                        <th>Read</th>
+                        <th>Remove</th>
+                    </tr>
+                </theader>
+                <tbody>
+                    <tr ng-repeat="book in books.objects">
+                        <td>{[ book.title ]}</td>
+                        <td>{[ book.read ]}</td>
+                        <td><button ng-click="remove($index)">-</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
