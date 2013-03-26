@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html data-ng-app="Library">
     <head>
         <title>RESTful Library</title>
@@ -12,12 +13,12 @@
 <body ng-controller="BookController">
     <header>
         <div class="container">
-            <h1>It works!</h1>
+            <h1>RESTful Library</h1>
         </div>
     </header>
 
     <div class="container">
-        <div class="box">
+        <div class="frame-left">
             <h3>New Book</h3>
             <form>
                 <input ng-model="newBook.title" type="text" placeholder="Insert title..." />
@@ -26,26 +27,40 @@
                     ng-options="user.resource_uri as user.username for user in users.objects">
                 </select>
                 <button ng-click="save(newBook)">Save</button>
-                <pre>
-                    {[ newBook ]}
-                </pre>
             </form>
+            <div id="status" class="status">
+                <p>{[ operationStatus ]}</p>
+            </div>
         </div>
 
-        <div class="box">
-            <table ng-init="refreshBooks()">
-                <theader>
+        <div class="frame-right">
+            <input type="text" ng-model="bookFilter.title" placeholder="Filter..." />
+            <table class="books" ng-init="getBooks()">
+                <thead>
                     <tr>
-                        <th>Book List</th>
-                        <th>Read</th>
+                        <th>Book List
+                            <a class="right" ng-click="setOrder('title')">&#9650;</a>
+                            <a class="right" ng-click="setOrder('-title')">&#9660;</a>
+                        </th>
+                        <th>Read
+                            <a class="right" ng-click="setOrder('read')">&#9650;</a>
+                            <a class="right" ng-click="setOrder('-read')">&#9660;</a>
+                        </th>
                         <th>Remove</th>
                     </tr>
-                </theader>
+                </thead>
                 <tbody>
-                    <tr ng-repeat="book in books.objects">
-                        <td>{[ book.title ]}</td>
-                        <td>{[ book.read ]}</td>
-                        <td><button ng-click="remove($index)">-</button></td>
+                    <tr ng-repeat="book in books.objects | filter: bookFilter | orderBy: orderBooks">
+                        <td>
+                            <div ng-show="showEditor">
+                                <input type="text" ng-model="newTitle" ng-required />
+                                <button ng-click="setTitle(book)">Save</button>
+                                <button ng-click="disableEditor()">Cancel</button>
+                            </div>
+                            <span ng-hide="showEditor" ng-click="enableEditor()">{[ book.title ]}</span>
+                        </td>
+                        <td><input type="checkbox" ng-model="book.read" ng-click="update(book)"></td>
+                        <td><button ng-click="remove(book)">-</button></td>
                     </tr>
                 </tbody>
             </table>
