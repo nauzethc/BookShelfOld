@@ -27,7 +27,14 @@ header {
         margin: 0;
     }
         header h1 {
-            line-height: ;
+            display: block;
+            padding-top: 5px;
+            float: left;
+        }
+
+        header .user-selector {
+            margin-top: 15px;
+            float: right;
         }
 
 .container {

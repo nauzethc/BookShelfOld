@@ -2,16 +2,25 @@
 
 /* Controllers */
 
-function BookController($scope, $http, Book, User) {
+function BookController($scope, $http, Book, UserBooks, User) {
     $scope.users = User.query();
+    $scope.showLibrary = false;
     $scope.orderBooks = 'title';
     $scope.operationStatus = 'This is status';
 
     // Common operations
-    $scope.getBooks = function() {
-        $scope.books = Book.query();
+    $scope.getBooks = function(user) {
+        if (typeof user === 'undefined'){
+            $scope.books = null;
+            $scope.showLibrary = false;
+        } else {
+            $scope.books = UserBooks.query({}, user, function(){
+                $scope.showLibrary = true;
+            });
+        }
     };
     $scope.save = function(book) {
+        book.user = $scope.user.resource_uri;
         Book.save({}, book, function(resource, status) {
             // Clear form
             $scope.clearData();
@@ -37,8 +46,8 @@ function BookController($scope, $http, Book, User) {
         $scope.orderBooks = order;
     };
     $scope.setTitle = function(book) {
-        $scope.update(book);
         this.book.title = this.newTitle;
+        $scope.update(book);
         this.disableEditor();
     };
 

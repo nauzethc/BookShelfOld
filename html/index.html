@@ -14,18 +14,21 @@
     <header>
         <div class="container">
             <h1>RESTful Library</h1>
+            <div class="user-selector">
+                <select
+                    ng-model="user"
+                    ng-change="getBooks(user)"
+                    ng-options="user as user.full_name for user in users.objects">
+                </select>
+            </div>
         </div>
     </header>
 
-    <div class="container">
+    <div ng-show="showLibrary" class="container">
         <div class="frame-left">
             <h3>New Book</h3>
             <form>
                 <input ng-model="newBook.title" type="text" placeholder="Insert title..." />
-                <select
-                    ng-model="newBook.user"
-                    ng-options="user.resource_uri as user.username for user in users.objects">
-                </select>
                 <button ng-click="save(newBook)">Save</button>
             </form>
             <div id="status" class="status">
@@ -35,7 +38,7 @@
 
         <div class="frame-right">
             <input type="text" ng-model="bookFilter.title" placeholder="Filter..." />
-            <table class="books" ng-init="getBooks()">
+            <table class="books">
                 <thead>
                     <tr>
                         <th>Book List
