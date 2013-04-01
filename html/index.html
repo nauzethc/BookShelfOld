@@ -3,8 +3,11 @@
     <head>
         <title>RESTful Library</title>
         <link rel="stylesheet" href="{{ STATIC_URL}}css/style.css">
+        <link rel="stylesheet" href="{{ STATIC_URL}}css/angular-ui.css">
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/angular.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/angular-resource.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/angular-ui.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/app.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/services.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/controllers.js"></script>
@@ -31,8 +34,8 @@
                 <input ng-model="newBook.title" type="text" placeholder="Insert title..." />
                 <button ng-click="save(newBook)">Save</button>
             </form>
-            <div id="status" class="status">
-                <p>{[ operationStatus ]}</p>
+            <div id="status" class="{[ statusClass ]}">
+                <p>{[ statusMessage ]}</p>
             </div>
         </div>
 
@@ -53,7 +56,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="book in books.objects | filter: bookFilter | orderBy: orderBooks">
+                    <tr ng-repeat="book in books.objects | filter: bookFilter | orderBy: orderBooks" ui-animate>
                         <td>
                             <div ng-show="showEditor">
                                 <input type="text" ng-model="newTitle" ng-required />
