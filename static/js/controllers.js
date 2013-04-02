@@ -2,11 +2,15 @@
 
 /* Controllers */
 
-function BookController($scope, $http, Book, UserBooks, User) {
+function LibraryController($scope, $http, Author, Book, UserBooks, User) {
+    $scope.books = {};
     $scope.users = User.query();
+    $scope.authors = Author.query();
     $scope.showLibrary = false;
     $scope.orderBooks = 'title';
-    $scope.operationStatus = 'This is status';
+    $scope.alertClass = '';
+    $scope.alertMessage = '';
+
 
     // Common operations
     $scope.getBooks = function(user) {
@@ -19,35 +23,94 @@ function BookController($scope, $http, Book, UserBooks, User) {
             });
         }
     };
-    $scope.save = function(book) {
+
+
+    // User
+    $scope.saveUser = function(user) {
+        user.username = user.first_name.toLowerCase() + user.last_name.toLowerCase().slice(0,2);
+        console.log(user);
+        User.save({}, user,
+            function(resource, status) {
+                $scope.clearUserData();
+                var headers = status();
+                $http.get(headers.location).success(function(user) {
+                    $scope.users.objects.push(user);
+                });
+            },
+            function() {
+                alert("Could not add new user!");
+            }
+        );
+    };
+
+    // Author
+    $scope.saveAuthor = function(author) {
+        Author.save({}, author,
+            function(resource, status) {
+                // Clear form
+                $scope.clearAuthorData();
+                // Get new book from API
+                var headers = status();
+                $http.get(headers.location).success(function(author) {
+                    $scope.authors.objects.push(author);
+                    $scope.showAlert(true, "The Author was added successfuly");
+                });
+            },
+            function() {
+                $scope.showAlert(false, "There was an error adding the author");
+            }
+        );
+    };
+
+
+    // Book
+    $scope.saveBook = function(book) {
         book.user = $scope.user.resource_uri;
-        Book.save({}, book, function(resource, status) {
-            // Clear form
-            $scope.clearData();
-            // Get new book from API and add it to list
-            var headers = status();
-            $http.get(headers.location).success(function(book) {
-                $scope.books.objects.push(book);
-            });
-        });
+        Book.save({}, book,
+            function(resource, status) {
+                // Clear form
+                $scope.clearBookData();
+                // Get new book from API and add it to list
+                var headers = status();
+                $http.get(headers.location).success(function(book) {
+                    $scope.books.objects.push(book);
+                    $scope.showAlert(true, "The book was added successfuly!");
+                });
+            },
+            function(){
+                $scope.showAlert(false, "There was an error adding the book!");
+            }
+        );
     };
-    $scope.remove = function(book) {
+
+    $scope.removeBook = function(book) {
         var index = $scope.books.objects.indexOf(book);
-        Book.remove({}, book, function() {
-            $scope.books.objects.splice(index, 1);
-        });
+        if (confirm("Are you sure to delete this book?")){
+            Book.remove({}, book,
+                function() {
+                    $scope.books.objects.splice(index, 1);
+                    $scope.showAlert(true, "The book was removed from your library!");
+                },
+                function(){
+                    $scope.showAlert(false, "The book couldn't be removed!");
+                }
+            );
+        }
     };
-    $scope.update = function(book) {
+
+    $scope.updateBook = function(book) {
         Book.update({}, book);
     };
+
 
     // Specific form operations
     $scope.setOrder = function(order) {
         $scope.orderBooks = order;
     };
-    $scope.setTitle = function(book) {
+
+    $scope.setBookTitle = function(book) {
         this.book.title = this.newTitle;
-        $scope.update(book);
+        $scope.updateBook(book);
         this.disableEditor();
     };
 
@@ -56,12 +119,33 @@ function BookController($scope, $http, Book, UserBooks, User) {
         this.newTitle = this.book.title;
         this.showEditor = true;
     };
+
     $scope.disableEditor = function() {
         this.showEditor = false;
     }
 
-    // Reset form
-    $scope.clearData = function() {
+    // Reset forms
+    $scope.clearBookData = function() {
         $scope.newBook = null;
     };
+    $scope.clearAuthorData = function() {
+        $scope.newAuthor = null;
+    }
+    $scope.clearUserData = function() {
+        $scope.newUser = null;
+    }
+
+    // Set alert
+    $scope.showAlert = function(success, msg) {
+        if (success){
+            $scope.alertClass = 'alert-success';
+        } else {
+            $scope.alertClass = 'alert-error';
+        }
+        $scope.alertMessage = msg;
+        $('.alert .close').bind('click', function(event) {
+            $(this).parent().fadeOut();
+        });
+        $('.alert').fadeIn();
+    }
 }

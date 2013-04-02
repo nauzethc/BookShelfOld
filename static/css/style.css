@@ -4,6 +4,7 @@ body {
     padding: 0;
     background: #DDD;
     color: #444;
+    background: linear-gradient(to bottom, #ddd, 50%, #777, 50%);
 }
 
 header {
@@ -97,6 +98,7 @@ header {
     transition: opacity 0.5s;
     -webkit-transition: opacity 0.5s;
 }
+
 .status-show {
     opacity: 0.75;
 }

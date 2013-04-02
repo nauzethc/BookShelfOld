@@ -1,49 +1,136 @@
 <!DOCTYPE html>
-<html data-ng-app="Library">
+<html lang="en" data-ng-app="Library">
     <head>
         <title>RESTful Library</title>
-        <link rel="stylesheet" href="{{ STATIC_URL}}css/style.css">
-        <script type="text/javascript" src="{{ STATIC_URL }}js/angular.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/angular-resource.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/app.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/services.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/controllers.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" media="screen">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css" media="screen">
     </head>
 
-<body ng-controller="BookController">
-    <header>
-        <div class="container">
-            <h1>RESTful Library</h1>
-            <div class="user-selector">
-                <select
-                    ng-model="user"
-                    ng-change="getBooks(user)"
-                    ng-options="user as user.full_name for user in users.objects">
-                </select>
+<body ng-controller="LibraryController">
+
+    <!-- Navbar Header -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">RESTful Library</a>
+
+                <div class="nav-collapse in collapse" style="height: auto;">
+                    <form class="navbar-form pull-right">
+                        <input type="text"
+                            placeholder="First Name"
+                            ng-model="newUser.first_name"
+                            ng-required />
+                        <input type="text"
+                            placeholder="Last Name"
+                            ng-model="newUser.last_name"
+                            ng-required />
+                        <button class="btn btn-primary" ng-click="saveUser(newUser)">Add</button>
+                        <select class="span3"
+                            ng-model="user" ng-change="getBooks(user)"
+                            ng-options="user as user.full_name for user in users.objects">
+                        </select>
+                    </form>
+                </div>
             </div>
         </div>
-    </header>
+    </div>
 
-    <div ng-show="showLibrary" class="container">
-        <div class="frame-left">
-            <h3>New Book</h3>
-            <form>
-                <input ng-model="newBook.title" type="text" placeholder="Insert title..." />
-                <button ng-click="save(newBook)">Save</button>
+
+    <!-- Main content -->
+    <div class="container-fluid" ng-show="showLibrary" style="padding-top: 60px;">
+
+        <div class="row-fluid">
+
+            <!-- Add new author -->
+            <form class="span6">
+                <fieldset>
+                    <legend>New author</legend>
+                    <input type="text" class="span6"
+                        ng-model="newAuthor.first_name"
+                        ng-required
+                        placeholder="First Name" />
+                    <input type="text" class="span6"
+                        ng-model="newAuthor.last_name"
+                        ng-required
+                        placeholder="Last Name" />
+                    <div class="form-actions">
+                        <button class="btn btn-primary"
+                            ng-click="saveAuthor(newAuthor)">
+                            Save
+                        </button>
+                    </div>
+                </fieldset>
             </form>
-            <div id="status" class="status">
-                <p>{[ operationStatus ]}</p>
+
+            <!-- Add new book form -->
+            <form class="span6">
+                <fieldset>
+                    <legend>New book</legend>
+                    <select class="span6"
+                        ng-model="newBook.author"
+                        ng-options="author.resource_uri as author.full_name for author in authors.objects | orderBy: 'last_name'"
+                        ng-required></select>
+                    <input class="span6" type="text"
+                        ng-model="newBook.title"
+                        ng-required
+                        placeholder="Insert title..." />
+                    <div class="form-actions">
+                        <button class="btn btn-primary"
+                            ng-click="saveBook(newBook)">
+                            Save
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+
+        <div class="row-fluid">
+            <!-- Display form action status -->
+            <div class="span12 alert fade in {[ alertClass ]}" style="display: none;">
+                <button type="button" class="close">&times;</button>
+                {[ alertMessage ]}
             </div>
         </div>
 
-        <div class="frame-right">
-            <input type="text" ng-model="bookFilter.title" placeholder="Filter..." />
-            <table class="books">
+
+        <div class="row-fluid">
+            <!-- Search filter form -->
+            <form class="span12 form-search">
+                <fieldset>
+                    <legend>Filter</legend>
+                    <input type="text"
+                        placeholder="Title..."
+                        class="input-medium search-query"
+                        ng-model="bookFilter.title" />
+                    <input type="text"
+                        placeholder="Author..."
+                        class="input-medium search-query"
+                        ng-model="bookFilter.author_full_name" />
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="row-fluid">
+            <!-- Books table -->
+            <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Book List
+                        <th>Title
                             <a class="right" ng-click="setOrder('title')">&#9650;</a>
                             <a class="right" ng-click="setOrder('-title')">&#9660;</a>
+                        </th>
+                        <th>Author
+                            <a class="right" ng-click="setOrder('author_full_name')">&#9650;</a>
+                            <a class="right" ng-click="setOrder('-author_full_name')">&#9660;</a>
                         </th>
                         <th>Read
                             <a class="right" ng-click="setOrder('read')">&#9650;</a>
@@ -56,19 +143,34 @@
                     <tr ng-repeat="book in books.objects | filter: bookFilter | orderBy: orderBooks">
                         <td>
                             <div ng-show="showEditor">
-                                <input type="text" ng-model="newTitle" ng-required />
-                                <button ng-click="setTitle(book)">Save</button>
-                                <button ng-click="disableEditor()">Cancel</button>
+                                <form class="form-inline">
+                                    <input class="input-small" type="text" ng-model="newTitle" ng-required />
+                                    <button class="btn btn-small" ng-click="setBookTitle(book)">Save</button>
+                                    <button class="btn btn-small" ng-click="disableEditor()">Cancel</button>
+                                </form>
                             </div>
                             <span ng-hide="showEditor" ng-click="enableEditor()">{[ book.title ]}</span>
                         </td>
-                        <td><input type="checkbox" ng-model="book.read" ng-click="update(book)"></td>
-                        <td><button ng-click="remove(book)">-</button></td>
+                        <td>{[ book.author_full_name ]}</td>
+                        <td><input type="checkbox" ng-model="book.read" ng-click="updateBook(book)"></td>
+                        <td>
+                            <a class="btn" ng-click="removeBook(book)" href="">
+                                <i class="icon-minus-sign"></i>
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
     </div>
 
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/angular.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/angular-resource.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/app.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/services.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/controllers.js"></script>
 </body>
 </html>
