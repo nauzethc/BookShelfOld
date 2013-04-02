@@ -24,19 +24,11 @@
 
                 <div class="nav-collapse in collapse" style="height: auto;">
                     <form class="navbar-form pull-right">
-                        <input type="text"
-                            placeholder="First Name"
-                            ng-model="newUser.first_name"
-                            ng-required />
-                        <input type="text"
-                            placeholder="Last Name"
-                            ng-model="newUser.last_name"
-                            ng-required />
-                        <button class="btn btn-primary" ng-click="saveUser(newUser)">Add</button>
                         <select class="span3"
                             ng-model="user" ng-change="getBooks(user)"
                             ng-options="user as user.full_name for user in users.objects">
                         </select>
+                        <a class="btn btn-primary" role="button" href="#addUserModal" data-toggle="modal">Add</a>
                     </form>
                 </div>
             </div>
@@ -95,7 +87,7 @@
 
         <div class="row-fluid">
             <!-- Display form action status -->
-            <div class="span12 alert fade in {[ alertClass ]}" style="display: none;">
+            <div class="span12 alert {[ alertClass ]}" style="display: hidden;">
                 <button type="button" class="close">&times;</button>
                 {[ alertMessage ]}
             </div>
@@ -154,7 +146,9 @@
                         <td>{[ book.author_full_name ]}</td>
                         <td><input type="checkbox" ng-model="book.read" ng-click="updateBook(book)"></td>
                         <td>
-                            <a class="btn" ng-click="removeBook(book)" href="">
+                            <a class="btn" role="button"
+                                href="#deleteModal" data-toggle="modal"
+                                ng-click="selectBook(book)">
                                 <i class="icon-minus-sign"></i>
                             </a>
                         </td>
@@ -163,6 +157,56 @@
             </table>
         </div>
 
+    </div>
+
+    <!-- Add User modal -->
+    <div id="addUserModal" class="modal hide fade">
+        <div class="modal-header">
+            <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true">&times;
+            </button>
+            <h3>New User</h3>
+        </div>
+        <div class="modal-body">
+            <label>First Name:
+            <input type="text"
+                ng-model="newUser.first_name"
+                ng-required />
+            </label>
+            <label>First Name:
+            <input type="text"
+                ng-model="newUser.last_name"
+                ng-required />
+            </label>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
+            <a href="#" ng-click="saveUser(newUser)" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Delete</a>
+        </div>
+    </div>
+
+    <!-- Delete Book modal -->
+    <div id="deleteModal" class="modal hide fade">
+        <div class="modal-header">
+            <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true">&times;
+            </button>
+            <h3>Confirmation</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure to delete this book?</p>
+            <p><strong>{[ selectedBook.author_full_name ]} - {[ selectedBook.title ]}</strong></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
+            <a href="#" ng-click="removeBook(selectedBook)" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Delete</a>
+        </div>
     </div>
 
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>

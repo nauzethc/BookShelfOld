@@ -24,6 +24,10 @@ function LibraryController($scope, $http, Author, Book, UserBooks, User) {
         }
     };
 
+    $scope.selectBook = function(book) {
+        $scope.selectedBook = book;
+    }
+
 
     // User
     $scope.saveUser = function(user) {
@@ -85,17 +89,15 @@ function LibraryController($scope, $http, Author, Book, UserBooks, User) {
 
     $scope.removeBook = function(book) {
         var index = $scope.books.objects.indexOf(book);
-        if (confirm("Are you sure to delete this book?")){
-            Book.remove({}, book,
-                function() {
-                    $scope.books.objects.splice(index, 1);
-                    $scope.showAlert(true, "The book was removed from your library!");
-                },
-                function(){
-                    $scope.showAlert(false, "The book couldn't be removed!");
-                }
-            );
-        }
+        Book.remove({}, book,
+            function() {
+                $scope.books.objects.splice(index, 1);
+                $scope.showAlert(true, "The book was removed from your library!");
+            },
+            function(){
+                $scope.showAlert(false, "The book couldn't be removed!");
+            }
+        );
     };
 
     $scope.updateBook = function(book) {
