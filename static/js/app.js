@@ -3,7 +3,7 @@
 /* App Module */
 var Library = {};
 
-var LibraryApp = angular.module('Library', ['ui', 'ngResource']);
+var LibraryApp = angular.module('Library', ['ngResource']);
 
 LibraryApp.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{[');

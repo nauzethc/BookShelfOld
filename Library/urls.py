@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 from tastypie.api import Api
-from books.resources import BookResource
+from books.resources import BookResource, AuthorResource
 from users.resources import UserResource
 
 # Uncomment the next two lines to enable the admin:
@@ -9,6 +9,7 @@ from users.resources import UserResource
 # admin.autodiscover()
 
 v1_api = Api(api_name='v1')
+v1_api.register(AuthorResource())
 v1_api.register(BookResource())
 v1_api.register(UserResource())
 
