@@ -46,6 +46,9 @@ function LibraryController($scope, $http, Author, Book, UserBooks, User) {
             }
         );
     };
+    $scope.refreshUsername = function(first_name) {
+        $scope.newUser.username = first_name.toLowerCase();
+    }
 
     // Author
     $scope.saveAuthor = function(author) {

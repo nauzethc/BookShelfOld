@@ -171,20 +171,33 @@
             <h3>New User</h3>
         </div>
         <div class="modal-body">
-            <label>First Name:
-            <input type="text"
-                ng-model="newUser.first_name"
-                ng-required />
-            </label>
-            <label>First Name:
-            <input type="text"
-                ng-model="newUser.last_name"
-                ng-required />
-            </label>
+            <form class="form-horizontal">
+                <div class="control-group">
+                    <label for="inputFirstName" class="control-label">First Name</label>
+                    <div class="controls">
+                        <input type="text" id="inputFirstName"
+                            ng-model="newUser.first_name" ng-change="refreshUsername(newUser.first_name)" ng-required />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="inputLastName" class="control-label">Last Name</label>
+                    <div class="controls">
+                        <input type="text" id="inputLastName"
+                            ng-model="newUser.last_name" ng-required />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="inputUsername" class="control-label">Username</label>
+                    <div class="controls">
+                        <input type="text" id="inputUsername"
+                            ng-model="newUser.username" ng-required />
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
-            <a href="#" ng-click="saveUser(newUser)" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Delete</a>
+            <a href="#" ng-click="saveUser(newUser)" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Add</a>
         </div>
     </div>
 
@@ -205,7 +218,7 @@
         </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</a>
-            <a href="#" ng-click="removeBook(selectedBook)" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Delete</a>
+            <a href="#" ng-click="removeBook(selectedBook)" class="btn btn-primary">Delete</a>
         </div>
     </div>
 
