@@ -1,11 +1,11 @@
 'use strict';
 
 /* App Module */
-var Library = {};
+var BookShelf = {};
 
-var LibraryApp = angular.module('Library', ['ngResource']);
+var BookShelfApp = angular.module('BookShelf', ['ngResource']);
 
-LibraryApp.config(function($interpolateProvider) {
+BookShelfApp.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{[');
   $interpolateProvider.endSymbol(']}');
 });

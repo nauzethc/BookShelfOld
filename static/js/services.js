@@ -2,7 +2,7 @@
 
 /* Services */
 
-LibraryApp.factory('Book', ['$resource', function($resource){
+BookShelfApp.factory('Book', ['$resource', function($resource){
     return $resource('/api/v1/book/:bookId', {
         "bookId": "@id"
     }, {
@@ -11,7 +11,7 @@ LibraryApp.factory('Book', ['$resource', function($resource){
     })
 }]);
 
-LibraryApp.factory('Author', ['$resource', function($resource){
+BookShelfApp.factory('Author', ['$resource', function($resource){
     return $resource('/api/v1/author/:authorId', {
         "authorId": "@id"
     }, {
@@ -20,7 +20,7 @@ LibraryApp.factory('Author', ['$resource', function($resource){
     })
 }]);
 
-LibraryApp.factory('UserBooks', ['$resource', function($resource){
+BookShelfApp.factory('UserBooks', ['$resource', function($resource){
     return $resource('/api/v1/book/?user__username=:username', {
         "username": "@username"
     }, {
@@ -28,7 +28,7 @@ LibraryApp.factory('UserBooks', ['$resource', function($resource){
     })
 }]);
 
-LibraryApp.factory('User', ['$resource', function($resource){
+BookShelfApp.factory('User', ['$resource', function($resource){
     return $resource('/api/v1/user/:userId/', {
         "userId": "@id"
     }, {

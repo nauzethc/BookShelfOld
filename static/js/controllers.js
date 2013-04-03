@@ -2,11 +2,11 @@
 
 /* Controllers */
 
-function LibraryController($scope, $http, Author, Book, UserBooks, User) {
+function BookShelfController($scope, $http, Author, Book, UserBooks, User) {
     $scope.books = {};
     $scope.users = User.query();
     $scope.authors = Author.query();
-    $scope.showLibrary = false;
+    $scope.showBookShelf = false;
     $scope.orderBooks = 'title';
     $scope.alertClass = '';
     $scope.alertMessage = '';
@@ -16,10 +16,10 @@ function LibraryController($scope, $http, Author, Book, UserBooks, User) {
     $scope.getBooks = function(user) {
         if (typeof user === 'undefined'){
             $scope.books = null;
-            $scope.showLibrary = false;
+            $scope.showBookShelf = false;
         } else {
             $scope.books = UserBooks.query({}, user, function(){
-                $scope.showLibrary = true;
+                $scope.showBookShelf = true;
             });
         }
     };
@@ -95,7 +95,7 @@ function LibraryController($scope, $http, Author, Book, UserBooks, User) {
         Book.remove({}, book,
             function() {
                 $scope.books.objects.splice(index, 1);
-                $scope.showAlert(true, "The book was removed from your library!");
+                $scope.showAlert(true, "The book was removed from your BookShelf!");
             },
             function(){
                 $scope.showAlert(false, "The book couldn't be removed!");

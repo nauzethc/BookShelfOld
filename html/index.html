@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="Library">
+<html lang="en" data-ng-app="BookShelf">
     <head>
-        <title>RESTful Library</title>
+        <title>RESTful BookShelf</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- Bootstrap -->
@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css" media="screen">
     </head>
 
-<body ng-controller="LibraryController">
+<body ng-controller="BookShelfController">
 
     <!-- Navbar Header -->
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -20,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="brand" href="#">RESTful Library</a>
+                <a class="brand" href="#">RESTful BookShelf</a>
 
                 <div class="nav-collapse in collapse" style="height: auto;">
                     <form class="navbar-form pull-right">
@@ -37,7 +37,7 @@
 
 
     <!-- Main content -->
-    <div class="container-fluid" ng-show="showLibrary" style="padding-top: 60px;">
+    <div class="container-fluid" ng-show="showBookShelf" style="padding-top: 60px;">
 
         <div class="row-fluid">
 

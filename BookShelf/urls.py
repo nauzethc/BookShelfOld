@@ -15,8 +15,8 @@ v1_api.register(UserResource())
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'Library.views.home', name='home'),
-    # url(r'^Library/', include('Library.foo.urls')),
+    # url(r'^$', 'BookShelf.views.home', name='home'),
+    # url(r'^BookShelf/', include('BookShelf.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
