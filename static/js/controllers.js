@@ -3,17 +3,15 @@
 /* Controllers */
 
 function BookShelfController($scope, $http, Author, Book, UserBooks, User) {
-    $scope.books = {};
     $scope.users = User.query();
     $scope.authors = Author.query();
     $scope.showBookShelf = false;
-    $scope.orderBooks = 'title';
-    $scope.alertClass = '';
-    $scope.alertMessage = '';
+    $scope.alerts = [];
 
 
     // Common operations
     $scope.getBooks = function(user) {
+        $scope.orderBooks = 'title';
         if (typeof user === 'undefined'){
             $scope.books = null;
             $scope.showBookShelf = false;
@@ -42,7 +40,7 @@ function BookShelfController($scope, $http, Author, Book, UserBooks, User) {
                 });
             },
             function() {
-                alert("Could not add new user!");
+                $scope.addAlert('error', 'Could not add new user!');
             }
         );
     };
@@ -60,11 +58,11 @@ function BookShelfController($scope, $http, Author, Book, UserBooks, User) {
                 var headers = status();
                 $http.get(headers.location).success(function(author) {
                     $scope.authors.objects.push(author);
-                    $scope.showAlert(true, "The Author was added successfuly");
+                    $scope.addAlert('success', 'The Author was added successfuly');
                 });
             },
             function() {
-                $scope.showAlert(false, "There was an error adding the author");
+                $scope.addAlert('error', "There was an error adding the author");
             }
         );
     };
@@ -81,11 +79,11 @@ function BookShelfController($scope, $http, Author, Book, UserBooks, User) {
                 var headers = status();
                 $http.get(headers.location).success(function(book) {
                     $scope.books.objects.push(book);
-                    $scope.showAlert(true, "The book was added successfuly!");
+                    $scope.addAlert('success', "The book was added successfuly!");
                 });
             },
             function(){
-                $scope.showAlert(false, "There was an error adding the book!");
+                $scope.addAlert('error', "There was an error adding the book!");
             }
         );
     };
@@ -95,10 +93,10 @@ function BookShelfController($scope, $http, Author, Book, UserBooks, User) {
         Book.remove({}, book,
             function() {
                 $scope.books.objects.splice(index, 1);
-                $scope.showAlert(true, "The book was removed from your BookShelf!");
+                $scope.addAlert('success', "The book was removed from your BookShelf!");
             },
             function(){
-                $scope.showAlert(false, "The book couldn't be removed!");
+                $scope.addAlert('error', "The book couldn't be removed!");
             }
         );
     };
@@ -141,16 +139,11 @@ function BookShelfController($scope, $http, Author, Book, UserBooks, User) {
     }
 
     // Set alert
-    $scope.showAlert = function(success, msg) {
-        if (success){
-            $scope.alertClass = 'alert-success';
-        } else {
-            $scope.alertClass = 'alert-error';
-        }
-        $scope.alertMessage = msg;
-        $('.alert .close').bind('click', function(event) {
-            $(this).parent().fadeOut();
-        });
-        $('.alert').fadeIn();
+    $scope.addAlert = function(status, message) {
+        $scope.alerts.push({ 'type': 'alert-'+status, 'msg': message });
+    }
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
     }
 }
